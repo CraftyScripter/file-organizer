@@ -26,8 +26,8 @@ fi
 if command -v uv >/dev/null 2>&1; then
   echo "Detected 'uv' — using 'uv' to manage and run the project."
   if [[ -f "pyproject.toml" ]]; then
-    echo "Running: uv install"
-    uv install || true
+    echo "Running: uv sync"
+    uv sync
   fi
   exec uv run main.py "$@"
 fi

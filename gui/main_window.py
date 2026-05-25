@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import logging
+import threading
 from pathlib import Path
 from typing import Any
 
-from PyQt6.QtCore import QDateTime, QPropertyAnimation, QThread, QTimer, Qt
+from PyQt6.QtCore import QDateTime, QPropertyAnimation, QTimer, Qt
 from PyQt6.QtWidgets import (
     QFileDialog,
     QFrame,
@@ -64,13 +65,13 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(1080, 720)
         self._settings = settings
         self._history_manager = HistoryManager()
-        self._worker_thread: QThread | None = None
+        self._worker_thread: threading.Thread | None = None
         self._worker: OperationWorker | None = None
-        self._watcher_thread: QThread | None = None
         self._watcher: FolderWatcher | None = None
         self._last_plans: list[OrganizationPlan] = []
         self._running_task: str | None = None
         self._live_refresh_pending = False
+        self._closing = False
         # Track last applied resolved theme/accent to avoid unnecessary reflows
         self._last_resolved_accent: str | None = None
         self._last_resolved_theme: str | None = None
@@ -199,9 +200,9 @@ class MainWindow(QMainWindow):
         self._run_operation("refresh")
 
     def closeEvent(self, event: object) -> None:
+        self._closing = True
         self._stop_watcher()
-        if self._worker:
-            self._worker.cancel()
+        self._stop_worker()
         event.accept()
 
     def resizeEvent(self, event: object) -> None:
@@ -319,6 +320,8 @@ class MainWindow(QMainWindow):
         return organizer, undo_service, analytics, duplicate_cleaner
 
     def _run_operation(self, task: str) -> None:
+        if self._closing:
+            return
         if self._worker_thread is not None:
             if task == "refresh":
                 self._live_refresh_pending = True
@@ -327,7 +330,6 @@ class MainWindow(QMainWindow):
                 self.statusBar().showMessage("An operation is already running.")
             return
         organizer, undo_service, analytics, duplicate_cleaner = self._build_services()
-        self._worker_thread = QThread(self)
         self._running_task = task
         self._set_operation_busy(True)
         self._notify_info(f"{self._operation_label(task)} started")
@@ -341,17 +343,15 @@ class MainWindow(QMainWindow):
             mode=self._organize.mode(),
             recursive=False,
         )
-        self._worker.moveToThread(self._worker_thread)
-        self._worker_thread.started.connect(self._worker.run)
         self._worker.progress.connect(self._update_progress)
         self._worker.preview_ready.connect(self._preview_ready)
         self._worker.stats_ready.connect(self._stats_ready)
         self._worker.finished.connect(self._operation_finished)
         self._worker.failed.connect(self._operation_failed)
-        self._worker.finished.connect(self._worker_thread.quit)
-        self._worker.failed.connect(self._worker_thread.quit)
-        self._worker_thread.finished.connect(self._cleanup_worker)
+        self._worker.finished.connect(self._cleanup_worker)
+        self._worker.failed.connect(self._cleanup_worker)
         self._progress.setValue(0)
+        self._worker_thread = threading.Thread(target=self._worker.run, daemon=True)
         self._worker_thread.start()
 
     def _update_progress(self, current: int, total: int, path: str) -> None:
@@ -430,15 +430,24 @@ class MainWindow(QMainWindow):
     def _cleanup_worker(self) -> None:
         if self._worker:
             self._worker.deleteLater()
-        if self._worker_thread:
-            self._worker_thread.deleteLater()
         self._worker = None
         self._worker_thread = None
         self._running_task = None
         self._set_operation_busy(False)
-        if self._live_refresh_pending:
+        if self._live_refresh_pending and not self._closing:
             self._live_refresh_pending = False
             QTimer.singleShot(0, lambda: self._run_operation("refresh"))
+
+    def _stop_worker(self) -> None:
+        if self._worker is not None:
+            self._worker.cancel()
+        self._worker_thread = None
+        if self._worker is not None:
+            self._worker.deleteLater()
+            self._worker = None
+        self._running_task = None
+        self._live_refresh_pending = False
+        self._set_operation_busy(False)
 
     def _set_operation_busy(self, busy: bool) -> None:
         self._progress.setVisible(busy)
@@ -522,21 +531,18 @@ class MainWindow(QMainWindow):
 
     def _start_watcher(self) -> None:
         self._stop_watcher()
-        self._watcher_thread = QThread(self)
         self._watcher = FolderWatcher(
             self._settings.default_folder,
             recursive=False,
             debounce_ms=min(self._settings.watchdog_debounce_ms, 150),
         )
-        self._watcher.moveToThread(self._watcher_thread)
-        self._watcher_thread.started.connect(self._watcher.start)
         self._watcher.file_created.connect(lambda path: self._activity.add_activity("Created", Path(path).name))
         self._watcher.file_deleted.connect(lambda path: self._activity.add_activity("Deleted", Path(path).name))
         self._watcher.file_modified.connect(lambda path: self._activity.add_activity("Modified", Path(path).name))
         self._watcher.file_moved.connect(lambda old, new: self._activity.add_activity("Moved", f"{Path(old).name} -> {Path(new).name}"))
         self._watcher.batch_ready.connect(self._watch_batch)
         self._watcher.status_changed.connect(self._update_watch_status)
-        self._watcher_thread.start()
+        self._watcher.start()
         self._update_watch_status("Live watching")
 
     def _stop_watcher(self) -> None:
@@ -544,11 +550,6 @@ class MainWindow(QMainWindow):
             self._watcher.stop()
             self._watcher.deleteLater()
             self._watcher = None
-        if self._watcher_thread is not None:
-            self._watcher_thread.quit()
-            self._watcher_thread.wait(3000)
-            self._watcher_thread.deleteLater()
-            self._watcher_thread = None
         self._watch_status_timer.stop()
         self._watch_status.setProperty("state", "idle")
         self._watch_status.setText("Not watching")

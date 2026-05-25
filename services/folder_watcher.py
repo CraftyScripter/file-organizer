@@ -94,7 +94,6 @@ class FolderWatcher(QObject):
         if self._observer is None:
             return
         self._observer.stop()
-        self._observer.join(timeout=5)
         self._observer = None
         logger.info("Stopped folder watcher")
         self.status_changed.emit("Not watching")

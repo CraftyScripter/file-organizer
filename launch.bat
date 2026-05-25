@@ -8,7 +8,7 @@ if exist ".venv\Scripts\python.exe" (
   rem If 'uv' is available, use it
   where uv >nul 2>&1 && (
     if exist "pyproject.toml" (
-      uv install || rem continue on failure
+      uv sync || exit /b %ERRORLEVEL%
     )
     uv run main.py %* || exit /b %ERRORLEVEL%
   )
@@ -20,7 +20,7 @@ if exist ".venv\Scripts\python.exe" (
 REM Fallback to system Python
 where uv >nul 2>&1 && (
   if exist "pyproject.toml" (
-    uv install || rem continue on failure
+    uv sync || exit /b %ERRORLEVEL%
   )
   uv run main.py %*
   exit /b %ERRORLEVEL%
