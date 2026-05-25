@@ -1,0 +1,17 @@
+[project]
+name = "file-organizer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pyqt6-charts>=6.11.0",
+    "pyqt6>=6.11.0",
+    "pytest>=9.0.3",
+    "qtawesome>=1.4.0",
+    "watchdog>=6.0.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

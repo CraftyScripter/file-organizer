@@ -1,0 +1,553 @@
+/* ===== macOS MONTEREY DARK THEME - GREEN ACCENT ===== */
+/* Soft dark theme inspired by macOS Monterey - Square borders */
+
+QWidget {
+    font-family: "Crimson Text", "Georgia", "Times New Roman", serif;
+    font-size: @font_size;
+    color: #e1e4e8;
+    background: #1c1c1e;
+}
+
+QLabel, QCheckBox, QRadioButton {
+    background: transparent;
+}
+
+#Root { 
+    background: #18181a; 
+}
+
+QMainWindow::separator { 
+    background: #2c2c2e;
+}
+
+#Sidebar {
+    background: #151517;
+    border-right: 1px solid #2c2c2e;
+}
+
+#SidebarBrand {
+    color: #3a8a3a;
+    font-family: "Playfair Display", "Georgia", serif;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 0 6px 8px 6px;
+    letter-spacing: 0.3px;
+}
+
+#SidebarButton, #SidebarToggle {
+    border: 0;
+    border-radius: 0px;
+    padding: 9px 12px;
+    color: #98989e;
+    text-align: left;
+    background: transparent;
+    font-family: "Crimson Text", serif;
+}
+
+#SidebarToggle {
+    background: #252528;
+    margin-bottom: 8px;
+}
+
+#SidebarButton:hover, #SidebarToggle:hover { 
+    background: #252528;
+    color: #6a9a5a; 
+}
+
+#SidebarButton:checked {
+    background: @accent_soft;
+    color: @accent;
+    border-left: 3px solid @accent;
+}
+
+#FolderSelector {
+    background: @accent;
+    color: @accent_foreground;
+    border: 1px solid @accent;
+    border-radius: 0px;
+    padding: 9px 12px;
+}
+
+#FolderSelector:hover {
+    background: @accent_hover;
+}
+
+#FolderCaption {
+    color: #98989e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+#FolderPath {
+    color: #6a9a5a;
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+#WatchStatus {
+    color: @accent;
+    background: @accent_soft;
+    border-radius: 999px;
+    padding: 8px 14px;
+    border: 1px solid rgba(124, 92, 255, 0.35);
+    font-weight: 700;
+}
+
+#WatchStatus[state="live"] {
+    color: #ffffff;
+    background: rgba(124, 92, 255, 0.28);
+    border-color: rgba(124, 92, 255, 0.55);
+}
+
+#WatchStatus[state="idle"] {
+    color: #98989e;
+    background: #262629;
+    border-color: #3a3a3c;
+}
+
+#WatchStatus[state="error"] {
+    color: #ffffff;
+    background: rgba(232, 83, 83, 0.25);
+    border-color: rgba(232, 83, 83, 0.55);
+}
+
+#LastScan { 
+    color: #98989e; 
+}
+
+QLineEdit, QComboBox, QSpinBox {
+    background: #1c1c1e;
+    color: #e1e4e8;
+    border: 1px solid #3a3a3c;
+    border-radius: 0px;
+    padding: 9px 12px;
+    selection-background-color: @accent;
+    selection-color: #ffffff;
+    font-family: "Crimson Text", serif;
+}
+
+QLineEdit:focus, QComboBox:focus, QSpinBox:focus {
+    border-color: @accent;
+    outline: none;
+}
+
+QPushButton {
+    background: @accent;
+    color: @accent_foreground;
+    border: 0;
+    border-radius: 0px;
+    padding: 10px 16px;
+    font-weight: 600;
+    font-family: "Crimson Text", serif;
+    letter-spacing: 0.3px;
+}
+
+QPushButton:hover { 
+    background: @accent_hover;
+}
+
+QProgressBar {
+    background: #2c2c2e;
+    border: 1px solid #3a3a3c;
+    border-radius: 0px;
+    height: 8px;
+    text-align: center;
+}
+
+QProgressBar::chunk { 
+    background: @accent; 
+    border-radius: 0px; 
+}
+
+#NotificationBanner {
+    padding: 10px 14px;
+    border-radius: 0px;
+    font-weight: 600;
+    color: #f4f4f5;
+    background: #2c2c2e;
+    border: 1px solid #3a3a3c;
+}
+
+#NotificationBanner[state="info"] {
+    background: rgba(124, 92, 255, 0.18);
+    border-color: rgba(124, 92, 255, 0.45);
+}
+
+#NotificationBanner[state="success"] {
+    background: rgba(58, 161, 109, 0.18);
+    border-color: rgba(58, 161, 109, 0.45);
+}
+
+#NotificationBanner[state="warning"] {
+    background: rgba(235, 176, 0, 0.18);
+    border-color: rgba(235, 176, 0, 0.45);
+}
+
+#NotificationBanner[state="error"] {
+    background: rgba(232, 83, 83, 0.2);
+    border-color: rgba(232, 83, 83, 0.5);
+}
+
+#ToastNotification {
+    background: #1c1c1e;
+    border: 1px solid #3a3a3c;
+    border-radius: 14px;
+}
+
+#ToastNotification[state="info"] {
+    border-color: rgba(124, 92, 255, 0.6);
+}
+
+#ToastNotification[state="success"] {
+    border-color: rgba(58, 161, 109, 0.6);
+}
+
+#ToastNotification[state="warning"] {
+    border-color: rgba(235, 176, 0, 0.65);
+}
+
+#ToastNotification[state="error"] {
+    border-color: rgba(232, 83, 83, 0.7);
+}
+
+#ToastTitle {
+    color: #f4f4f5;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+#ToastBody {
+    color: #e1e4e8;
+    font-size: 13px;
+}
+
+#PageTitle {
+    font-size: 28px;
+    font-weight: 700;
+    color: #6a9a5a;
+    font-family: "Playfair Display", "Georgia", serif;
+}
+
+#PageHelper {
+    color: #98989e;
+    font-size: 14px;
+    font-style: italic;
+}
+
+#PanelTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6a9a5a;
+    font-family: "Playfair Display", "Georgia", serif;
+    border-bottom: 1px solid #3a3a3c;
+    padding-bottom: 6px;
+}
+
+#StatCard, #ActionCard, #ChartPanel, #ActivityPanel, #AboutCard {
+    background: #1c1c1e;
+    border: 1px solid #3a3a3c;
+    border-radius: 0px;
+}
+
+#StatCard:hover, #ActionCard:hover { 
+    border-color: @accent; 
+}
+
+#ActionCard[selected="true"] {
+    background: @accent_soft;
+    border: 1px solid #3a3a3c;
+    border-left: 3px solid @accent;
+}
+
+#ActionCard[selected="true"] #ActionIconButton {
+    background: @accent;
+    border-color: @accent;
+}
+
+#ActionState {
+    color: @accent_foreground;
+    background: @accent;
+    border-radius: 0px;
+    padding: 5px 9px;
+    font-weight: 700;
+}
+
+#StatCardTitle, #ActionSubtitle, #ActivityTime { 
+    color: #98989e;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+#StatCardValue {
+    font-size: 30px;
+    font-weight: 800;
+    color: #6a9a5a;
+    font-family: "Playfair Display", "Georgia", serif;
+}
+
+#StatCardDetail, #ActivityBody { 
+    color: #98989e; 
+}
+
+#AnalyticsText { 
+    color: #98989e; 
+    line-height: 150%; 
+}
+
+#ActionTitle, #ActivityTitle { 
+    font-weight: 700;
+    color: #6a9a5a; 
+}
+
+#ActionIconButton {
+    background: @accent_soft;
+    border: 1px solid @accent;
+    border-radius: 0px;
+    min-width: 42px;
+    min-height: 42px;
+}
+
+/* ICON VISIBILITY FIX - Light icons on dark background */
+#ActionIconButton[icon] {
+    qproperty-icon: url(icons/action-light.svg);
+}
+
+#PreviewList {
+    background: transparent;
+    border: 0;
+}
+
+#PreviewCard {
+    background: #1c1c1e;
+    border: 1px solid #3a3a3c;
+    border-radius: 0px;
+}
+
+#PreviewCard:hover {
+    border-color: @accent;
+}
+
+#PreviewIcon {
+    background: @accent_soft;
+    color: @accent;
+    border: 1px solid @accent;
+    border-radius: 0px;
+    min-width: 56px;
+    min-height: 56px;
+    qproperty-alignment: AlignCenter;
+    font-weight: 800;
+    font-family: "Crimson Text", serif;
+}
+
+#PreviewFileName {
+    color: #6a9a5a;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: "Crimson Text", serif;
+}
+
+#PreviewMeta {
+    color: #98989e;
+    font-size: 11px;
+}
+
+#PreviewPath, #PreviewReason {
+    color: #98989e;
+    font-size: 11px;
+}
+
+#DangerButton {
+    background: #2c2022;
+    border: 1px solid #4a3a3c;
+    color: #d69d8a;
+}
+
+#DangerButton:hover {
+    border-color: @accent;
+    color: @accent;
+    background: #3a2a2c;
+}
+
+#ActivityItem {
+    background: #151517;
+    border: 1px solid #3a3a3c;
+    border-radius: 0px;
+}
+
+#ActivityItem:hover {
+    border-color: @accent;
+    background: #202022;
+}
+
+#ActivitySubtitle {
+    color: #98989e;
+    font-size: 12px;
+}
+
+#ActivityTitle {
+    font-size: 13px;
+}
+
+#ActivityBody {
+    color: #98989e;
+    font-size: 12px;
+}
+
+#ActivityClearButton {
+    background: #252528;
+    color: #98989e;
+    border: 1px solid #3a3a3c;
+    border-radius: 0px;
+    padding: 6px 10px;
+    min-height: 0;
+    font-family: "Crimson Text", serif;
+}
+
+#ActivityClearButton:hover {
+    border-color: @accent;
+    color: @accent;
+    background: @accent_soft;
+}
+
+#EmptyState {
+    color: #5a5a60;
+    padding: 16px;
+    font-style: italic;
+}
+
+QScrollArea, QScrollArea > QWidget, QScrollArea > QWidget > QWidget {
+    background: transparent;
+}
+
+QTableView, QTableWidget {
+    background: #151517;
+    alternate-background-color: #18181a;
+    border: 1px solid #3a3a3c;
+    border-radius: 0px;
+    gridline-color: #2c2c2e;
+    selection-background-color: @accent_soft;
+    selection-color: #6a9a5a;
+    font-family: "Crimson Text", serif;
+}
+
+QHeaderView::section {
+    background: #1c1c1e;
+    color: #98989e;
+    border: 0;
+    border-right: 1px solid #3a3a3c;
+    padding: 10px;
+    font-weight: 600;
+    font-family: "Crimson Text", serif;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+QTabWidget::pane { 
+    border: 1px solid #3a3a3c; 
+    border-radius: 0px; 
+    background: #1c1c1e;
+}
+
+QTabBar::tab {
+    background: #151517;
+    color: #98989e;
+    padding: 10px 16px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    font-family: "Crimson Text", serif;
+}
+
+QTabBar::tab:selected { 
+    background: @accent; 
+    color: @accent_foreground; 
+    font-weight: 600;
+}
+
+QScrollBar:vertical { 
+    background: #18181a; 
+    width: 8px; 
+    border-radius: 0px;
+}
+
+QScrollBar::handle:vertical { 
+    background: #4a4a50;
+    border-radius: 0px; 
+    min-height: 42px; 
+}
+
+QScrollBar::handle:vertical:hover {
+    background: @accent;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { 
+    height: 0; 
+}
+
+QScrollBar:horizontal { 
+    height: 0; 
+}
+
+/* Checkbox & Radio */
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #5a5a60;
+    background: #151517;
+    border-radius: 0px;
+}
+
+QCheckBox::indicator:checked {
+    background: @accent;
+    border-color: @accent;
+}
+
+QRadioButton::indicator {
+    border-radius: 0px;
+}
+
+QRadioButton::indicator:checked {
+    background: @accent;
+    border-color: @accent;
+}
+
+/* Tooltips */
+QToolTip {
+    background: #252528;
+    color: #6a9a5a;
+    border: 1px solid #3a3a3c;
+    border-radius: 0px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-family: "Crimson Text", serif;
+}
+
+/* ComboBox */
+QComboBox::drop-down {
+    border: none;
+    background: transparent;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #98989e;
+    margin-right: 8px;
+}
+
+/* SpinBox */
+QSpinBox::up-button, QSpinBox::down-button {
+    background: #1c1c1e;
+    border: none;
+    width: 20px;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background: #2c2c2e;
+}
