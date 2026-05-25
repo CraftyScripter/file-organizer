@@ -1,76 +1,88 @@
-# File Organizer
+# Intelligent File Organizer
 
-This Python script organizes files in a directory into subdirectories based on their file types. It categorizes files into predefined types such as documents, images, videos, audio, spreadsheets, presentations, archives, executables, web files, databases, and text files.
+A PyQt6 desktop application for organizing files (Linux-first) with a cross-platform Python architecture.
+
+## Architecture
+
+- `config/` keeps application settings and the original extension-to-category mapping.
+- `core/` contains the business logic: scanning, classification, duplicate detection, moves, SQLite history, and orchestration.
+- `services/` contains application services for preview, undo, and realtime folder watching.
+- `gui/` contains the PyQt6 interface and worker objects that keep long operations off the UI thread.
+- `storage/` stores the SQLite database, JSON settings, and logs.
+- `tests/` covers core behavior that should remain stable as the GUI evolves.
+
+The default `type` mode preserves the original script behavior: known extensions are moved into folders such as `document`, `image`, `video`, `audio`, and the other existing categories.
 
 ## Features
 
-- Automatically categorizes files based on their extensions.
-- Creates subdirectories for each file type if they do not already exist.
-- Moves files into their respective subdirectories.
+- Drag-and-drop folder selection
+- Direct-folder scanning by default so existing subfolders and project directories are not modified
+- Preview before moving
+- Start, cancel, and progress feedback
+- Undo last organization run
+- Hidden file filtering
+- Name collision handling
+- SHA256 duplicate detection
+- SQLite history
+- File logging
+- Realtime Downloads monitoring with watchdog
+- Organization modes for type, extension, size, creation date, modification date, and custom rules
 
-## File Types Supported
+## Custom Rules
 
-The script categorizes files into the following types:
+Rules are stored in `storage/settings.json` and editable from Settings as JSON.
 
-- **Document:** `doc`, `docx`, `pdf`, `odt`, `rtf`, `tex`, `wpd`, `wks`, `wps`, `pages`
-- **Image:** `jpg`, `jpeg`, `png`, `gif`, `bmp`, `svg`, `tiff`, `tif`, `psd`, `ai`, `eps`, `raw`, `cr2`, `nef`, `orf`, `sr2`, `ico`, `heic`
-- **Video:** `mp4`, `avi`, `mkv`, `mov`, `flv`, `wmv`, `mpg`, `mpeg`, `3gp`, `webm`, `vob`, `ogv`, `m4v`
-- **Audio:** `mp3`, `wav`, `aac`, `flac`, `ogg`, `wma`, `m4a`, `aiff`, `au`, `pcm`, `aif`, `midi`, `mid`
-- **Spreadsheet:** `xls`, `xlsx`, `csv`, `ods`, `xlr`, `xlt`, `xlsm`
-- **Presentation:** `ppt`, `pptx`, `odp`, `key`, `pps`, `ppsx`, `pptm`
-- **Archive:** `zip`, `rar`, `tar`, `gz`, `7z`, `bz2`, `xz`, `iso`, `dmg`, `tgz`, `cab`, `lz`, `jar`
-- **Executable:** `exe`, `bat`, `sh`, `bin`, `apk`, `com`, `msi`, `gadget`, `wsf`
-- **Web:** `html`, `htm`, `css`, `js`, `php`, `asp`, `aspx`, `jsp`, `cfm`, `xml`, `rss`, `xhtml`
-- **Database:** `sql`, `db`, `mdb`, `accdb`, `sqlite`, `dbf`, `pdb`, `sqlitedb`
-- **Text:** `txt`, `md`, `log`, `json`, `yaml`, `yml`, `ini`, `cfg`, `conf`
+Example:
 
-## Requirements
+```json
+[
+  {
+    "name": "Large PDFs to Books",
+    "enabled": true,
+    "conditions": {
+      "ext": "pdf",
+      "size_gt_mb": 50
+    },
+    "destination": "Books"
+  }
+]
+```
 
-- Python 3.x
-- `os` and `shutil` modules (included with Python standard library)
+Supported conditions:
 
-## Installation
+- `ext`
+- `type`
+- `size_gt_mb`
+- `size_lt_mb`
+- `name_contains`
 
-1. **Clone the repository:**
+## Install
 
-    ```bash
-    git clone https://github.com/yourusername/file-organizer.git
-    cd file-organizer
-    ```
+Requires Python >= 3.12.
 
-2. **Install Python:**
+Create a virtual environment and install the runtime dependencies directly:
 
-    - **Windows:**
-      Download and install Python from [python.org](https://www.python.org/downloads/). Ensure you check the box to add Python to your PATH during installation.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install "pyqt6>=6.11.0" "pyqt6-charts>=6.11.0" "qtawesome>=1.4.0" "watchdog>=6.0.0" pytest
+```
 
-    - **Linux:**
-      Python is often pre-installed. If not, you can install it using your package manager. For example, on Ubuntu:
+Dependencies are declared in `pyproject.toml`.
 
-      ```bash
-      sudo apt update
-      sudo apt install python3
-      ```
+## Run
 
-## Usage
+```bash
+python main.py
+```
 
-1. **Edit the script to set the target directory:**
+## Test
 
-    Open `file_organizer.py` in a text editor and update the `directory_to_organize` variable with the path of the directory you want to organize.
+```bash
+python -m pytest
+```
 
-    ```python
-    directory_to_organize = r'path to target directory'
-    ```
+## Notes
 
-    - **Windows:** Use double backslashes (`\\`) or raw string notation (prefix the string with `r`) for the directory path. Example: `r'C:\Users\YourUsername\Downloads'`
-    - **Linux:** Use forward slashes (`/`) for the directory path. Example: `'/home/yourusername/Downloads'`
-
-2. **Run the script:**
-
-    Open a terminal or command prompt and execute the script:
-
-    ```bash
-    python file_organizer.py
-    ```
-
-    - **Windows:** You may need to use `python` or `python3` depending on your installation.
-    - **Linux:** Typically, you can use `python3` if Python 2 is also installed. 
+- The app creates `storage/app.db` automatically on first launch.
+- Logs are written to `storage/logs/file_organizer.log`.
